@@ -18,7 +18,7 @@ const Signup = () => {
         <View style={styles.extratextcontainer}>
         <Text>Already have an account?</Text>
         <TouchableOpacity>
-        <Text>Sign In</Text>
+        <Text>SignIn</Text>
         </TouchableOpacity>
         </View>
     </SafeAreaView>
