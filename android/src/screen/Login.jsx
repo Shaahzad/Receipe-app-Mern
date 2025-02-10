@@ -14,11 +14,11 @@ const Login = () => {
             <Text style={styles.btntext}>Login</Text>
         </TouchableOpacity>
       </View>
-     <View>
-        <Text>Don't have an Account ?</Text>
+     <View style={styles.extratextcontainer}>
+        <Text style={styles.extratext}>Don't have an Account?</Text>
      </View>
      <TouchableOpacity>
-        <Text>Sign Up</Text>
+        <Text style={styles.signlink}>SignUp</Text>
      </TouchableOpacity>
     </SafeAreaView>
   )
@@ -68,5 +68,19 @@ btntext:{
     color: 'white',
     textAlign: 'center',
     fontWeight: 'bold'
+},
+extratextcontainer:{
+    flex:1,
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  extratext:{
+    textAlign: 'center',
+    fontSize: 20,
+    padding: 10
+  },
+signlink:{
+  fontSize: 20,
+  padding: 10
 }
 })

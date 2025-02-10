@@ -19,7 +19,7 @@ const Signup = () => {
         <View style={styles.extratextcontainer}>
         <Text style={styles.extratext}>Already have an account?</Text>
         <TouchableOpacity>
-        <Text style={styles.signlink}>Sign In</Text>
+        <Text style={styles.signlink}>SignIn</Text>
         </TouchableOpacity>
         </View>
       </ScrollView>
