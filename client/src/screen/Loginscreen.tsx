@@ -1,8 +1,9 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Alert, Button, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { RootStackParamsList } from "../navigation/RootNavigation";
 import { TextInput } from "react-native-gesture-handler";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 type LoginscreenNavigationProp = NativeStackNavigationProp<RootStackParamsList, 'Loginscreen'>
 
@@ -13,8 +14,16 @@ interface LoginscreenProps {
 const Loginscreen: React.FC<LoginscreenProps> = ({navigation}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const {signIn} = useContext(AuthContext)
     const HandleLogin = async()=>{
- 
+      if(email && password){
+        const result = await signIn(email, password)
+        if(result){
+          navigation.navigate("Home")
+        }else{
+          Alert.alert("Login Failed", "Please try again with a different email")
+        }
+      }
     }
     return (
         <View style={styles.container}>

@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import axios from "axios"
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -41,10 +42,37 @@ export const AuthProvider : React.FC<{children : React.ReactNode}> = ({children}
     }
 
     const signIn = async (email : string, password : string) : Promise<boolean> => {
-        return true;
+        try {
+            const result = await axios.post(`${API_URL}/api/auth/login`, {email, password});
+            const {token, userId, success} = result.data;
+            if(!success) {
+                await AsyncStorage.setItem("token", token)
+                setToken(token)
+                await AsyncStorage.setItem("userId", userId)
+                setUserId(userId)
+                return true
+            }else{
+                return false
+            }
+        } catch (error) {
+            console.log(error)
+            if(axios.isAxiosError(error)){
+                 console.log(error.response?.data)
+         }
+            return false
+        }
      }
 
-     const signOut = async(): Promise<void> => {}
+     const signOut = async(): Promise<void> => {
+        try {
+            await AsyncStorage.removeItem("token");
+            await AsyncStorage.removeItem("userId")
+            setToken(null)
+            setUserId(null)
+        } catch (error) {
+           console.log(error)
+        }
+     }
 
     return <AuthContext.Provider value={{token, isLoading, userId, signUp, signIn, signOut}}>
         {children}
