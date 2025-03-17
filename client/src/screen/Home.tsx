@@ -1,9 +1,11 @@
-import { useContext, useState } from "react";
-import { Alert, Button, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
+import { useContext, useEffect, useState } from "react";
+import { Alert, Button, FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
 import { AuthContext } from "../context/AuthContext";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamsList } from "../navigation/RootNavigation";
 import CreateReceipeForm from "../components/CreateReceipeForm";
+import { Receipe, ReceipeContext } from "../context/ReceipeContext";
+import ReceipeItem from "../components/ReceipeItem";
 
 
 type HomescreenNavigationProps = NativeStackNavigationProp<RootStackParamsList, "Home">
@@ -17,6 +19,12 @@ const Homescreen: React.FC<HomescreenProps> = ({navigation}) => {
     const {signOut} = useContext(AuthContext)
     const [showModal, setshowModal] = useState(false)
     const [searchquery, setsearchquery] = useState('')
+    const {createReceipe} = useContext(ReceipeContext)
+    const {fetchReceipes, receipes} = useContext(ReceipeContext)
+
+    useEffect(()=>{
+     fetchReceipes()
+    },[])
     const Handlelogout = async()=>{
         Alert.alert("Logout","Are you sure you want to logout?",
             [{text:"Cancel", style: "cancel"},{text:"Logout",onPress: async()=>{
@@ -24,6 +32,15 @@ const Homescreen: React.FC<HomescreenProps> = ({navigation}) => {
                 navigation.replace("Loginscreen")
             }}])
     }
+
+    const handleonCreateReceipeButtonSubmit = async(
+        newReceipe:Omit<Receipe, '_id' | 'createdBy' | 'createdAt'>
+   ) => {
+    //    console.log(newReceipe)
+    createReceipe(newReceipe)
+    setshowModal(false)
+   }
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -40,7 +57,10 @@ const Homescreen: React.FC<HomescreenProps> = ({navigation}) => {
             </View>
             {/* <ReceipeList/> */}
 
-
+           <FlatList
+           data={receipes}
+           renderItem={({item})=> <ReceipeItem receipe={item}/>}
+           />
 
 
             {/* modal for creating new receipes */}
@@ -49,7 +69,7 @@ const Homescreen: React.FC<HomescreenProps> = ({navigation}) => {
             animationType="slide"
             onRequestClose={()=> setshowModal(false)}
             >
-              <CreateReceipeForm onCancel={()=> setshowModal(false)}/>
+              <CreateReceipeForm onCancel={()=> setshowModal(false)} onSubmit={handleonCreateReceipeButtonSubmit}/>
             </Modal>
         </View>
     );
