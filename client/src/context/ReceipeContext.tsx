@@ -21,6 +21,7 @@ interface ReceipeContextData {
         receipe: Omit<Receipe, '_id' | 'createdBy' | 'createdAt'>
     ) => Promise<void>
     fetchReceipes: () => Promise<void>
+    fetchsingleReceipe: (id: string)=> Promise<Receipe>
 }
 
 export const ReceipeContext = createContext<ReceipeContextData>({} as ReceipeContextData)
@@ -52,5 +53,20 @@ export const ReceipeProvider : React.FC<{children : React.ReactNode}> = ({childr
             console.log(error)
         }
     }
-    return <ReceipeContext.Provider value={{createReceipe, receipes, fetchReceipes}}>{children}</ReceipeContext.Provider>
+
+    const fetchsingleReceipe = async(id: string): Promise<Receipe> =>{
+    try {
+        const result = await axios.get(`${API_URL}/api/receipe/get/${id}`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        return result.data.data
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+    }
+    return <ReceipeContext.Provider value={{createReceipe, receipes, fetchReceipes, fetchsingleReceipe}}>{children}</ReceipeContext.Provider>
 }

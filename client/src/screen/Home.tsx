@@ -59,7 +59,7 @@ const Homescreen: React.FC<HomescreenProps> = ({navigation}) => {
 
            <FlatList
            data={receipes}
-           renderItem={({item})=> <ReceipeItem receipe={item}/>}
+           renderItem={({item})=> <ReceipeItem receipe={item} onPressReceipeItem={() => navigation.navigate('ReceipeDetailsScreen', {ReceipeId: item._id})}/>}
            />
 
 
